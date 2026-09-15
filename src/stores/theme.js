@@ -11,8 +11,7 @@ export const useThemeStore = defineStore("theme", () => {
   /* ---------- getters ---------- */
   const themes = computed(() => THEMES);
   const themeClass = computed(() => `theme-${theme.value}`);
-  const isActive = (t) => theme.value === t; // not reactive-friendly on its own; see note below
-  // Prefer a getter factory if you need reactivity:
+  const isActive = (t) => theme.value === t; 
   const isActiveRef = (t) => computed(() => theme.value === t);
 
   /* ---------- actions ---------- */

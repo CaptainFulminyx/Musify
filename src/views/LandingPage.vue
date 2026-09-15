@@ -1,20 +1,20 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useThemeStore } from "@/stores/theme";
 
-/* ---------- Theme ---------- */
-const themes = ["phosphor", "amber", "iceberg"];
-const theme = ref("phosphor");
+const themeStore = useThemeStore();
+const { theme, themes } = themeStore; // `theme` is a ref, `themes` a computed ref
 
 /* ---------- Typewriter ---------- */
-const commands = [
+const commands = computed(() => [
   "> play lofi beats",
   "> to your local music",
   "> be the nerd in the group",
   "> no nonsense",
   "> just you, your keyboard, and the music.",
   "> volume 80",
-  `> theme ${theme.value}`,
-];
+  themeStore.themeCommand, // reactive now — updates when theme changes
+]);
 
 const typedText = ref("");
 let cmdIndex = 0;
@@ -23,7 +23,7 @@ let deleting = false;
 let timeoutId = null;
 
 const tick = () => {
-  const current = commands[cmdIndex];
+  const current = commands.value[cmdIndex];
   if (!deleting) {
     typedText.value = current.slice(0, ++charIndex);
     if (charIndex === current.length) {
@@ -35,20 +35,18 @@ const tick = () => {
     typedText.value = current.slice(0, --charIndex);
     if (charIndex === 0) {
       deleting = false;
-      cmdIndex = (cmdIndex + 1) % commands.length;
+      cmdIndex = (cmdIndex + 1) % commands.value.length;
     }
   }
   timeoutId = setTimeout(tick, deleting ? 30 : 65);
 };
 
-onMounted(() => {
-  timeoutId = setTimeout(tick, 400);
-});
+onMounted(() => (timeoutId = setTimeout(tick, 400)));
 onUnmounted(() => clearTimeout(timeoutId));
 </script>
 
 <template>
-  <div class="landing" :class="`theme-${theme}`">
+  <div class="landing">
     <div class="scanlines" aria-hidden="true"></div>
     <div class="flicker" aria-hidden="true"></div>
     <div class="vignette" aria-hidden="true"></div>
@@ -60,7 +58,7 @@ onUnmounted(() => clearTimeout(timeoutId));
           v-for="t in themes"
           :key="t"
           :class="{ active: theme === t }"
-          @click="theme = t"
+          @click="themeStore.setTheme(t)"
           :title="`Switch to ${t}`"
         >
           {{ t }}
