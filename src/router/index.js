@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LandingPage from '#/LandingPage.vue'
+import LandingPage from '#/Jukebox.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

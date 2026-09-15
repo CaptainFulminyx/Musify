@@ -8,6 +8,7 @@ const { themes } = themeStore; // just themes, we'll use the store directly
 /* ---------- Typewriter ---------- */
 const commands = computed(() => [
   "> play lofi beats",
+  "> play lofi beats",
   "> to your local music",
   "> be the nerd in the group",
   "> no nonsense",
