@@ -26,9 +26,11 @@
 .header {
   position: absolute;
   color: #0f0;
-  font-size: 3rem;
-  top: 60%;
-  left: 60%;
+  font-size: 40px;
+  background: #000;
+  padding: 15px;
+  top: 63%;
+  left: 63%;
   transform: translate(-50%, -50%);
   z-index: 10;
 }
