@@ -7,6 +7,8 @@
   box-sizing: border-box;
   font-family:"Press Start 2P", system-ui; ;
 }
+
+
 /* =========================================================
    BashTune — Global Styles
    Themes, CRT chrome, buttons, shared UI primitives
@@ -28,7 +30,7 @@
 }
 
 /* Theme overrides — usable anywhere by adding class to any wrapper */
-.theme-phosphor {
+html.theme-phosphor {
   --bg: #0a0f0a;
   --fg: #33ff66;
   --dim: #1f8f3f;
@@ -36,7 +38,7 @@
   --glow: rgba(51, 255, 102, 0.35);
   --border: #1f8f3f;
 }
-.theme-amber {
+html.theme-amber {
   --bg: #120a02;
   --fg: #f90;
   --dim: #d96000;
@@ -44,7 +46,7 @@
   --glow: rgba(255, 106, 0, 0.5);
   --border: #a06a00;
 }
-.theme-iceberg {
+html.theme-iceberg {
   --bg: #04121c;
   --fg: #6fd7ff;
   --dim: #2d6d8a;
@@ -52,6 +54,7 @@
   --glow: rgba(111, 215, 255, 0.35);
   --border: #2d6d8a;
 }
+
 
 /* ---------- Base ---------- */
 html,
@@ -64,9 +67,14 @@ body {
   transition: background 0.4s ease, color 0.4s ease;
 }
 
+::selection{
+  background: var(--fg);
+  color: var(--bg);
+}
+
 /* ---------- CRT overlays ---------- */
 .scanlines,
-.flicker,
+
 .vignette {
   pointer-events: none;
   position: fixed;
@@ -83,15 +91,7 @@ body {
   );
   mix-blend-mode: multiply;
 }
-.flicker {
-  background: rgba(255, 255, 255, 0.015);
-  animation: flicker 0.15s infinite;
-}
-@keyframes flicker {
-  0%   { opacity: 0.85; }
-  50%  { opacity: 1; }
-  100% { opacity: 0.9; }
-}
+
 .vignette {
   background: radial-gradient(
     ellipse at center,
@@ -127,6 +127,7 @@ body {
 .theme-switch button {
   background: transparent;
   color: var(--dim);
+  
   border: 1px solid var(--border);
   font-family: inherit;
   font-size: 0.7rem;

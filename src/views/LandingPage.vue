@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useThemeStore } from "@/stores/theme";
 
 const themeStore = useThemeStore();
-const { theme, themes } = themeStore; // `theme` is a ref, `themes` a computed ref
+const { themes } = themeStore; // just themes, we'll use the store directly
 
 /* ---------- Typewriter ---------- */
 const commands = computed(() => [
@@ -13,7 +13,7 @@ const commands = computed(() => [
   "> no nonsense",
   "> just you, your keyboard, and the music.",
   "> volume 80",
-  themeStore.themeCommand, // reactive now — updates when theme changes
+  themeStore.themeCommand.value, // reactive now — updates when theme changes
 ]);
 
 const typedText = ref("");
@@ -47,17 +47,13 @@ onUnmounted(() => clearTimeout(timeoutId));
 
 <template>
   <div class="landing">
-    <div class="scanlines" aria-hidden="true"></div>
-    <div class="flicker" aria-hidden="true"></div>
-    <div class="vignette" aria-hidden="true"></div>
-
     <header class="topbar">
       <div class="window-title"></div>
       <div class="theme-switch">
         <button
           v-for="t in themes"
           :key="t"
-          :class="{ active: theme === t }"
+          :class="{ active: themeStore.isActive(t) }"
           @click="themeStore.setTheme(t)"
           :title="`Switch to ${t}`"
         >
