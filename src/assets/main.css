@@ -7,3 +7,218 @@
   box-sizing: border-box;
   font-family:"Press Start 2P", system-ui; ;
 }
+/* =========================================================
+   BashTune — Global Styles
+   Themes, CRT chrome, buttons, shared UI primitives
+   ========================================================= */
+
+/* ---------- Root / theme tokens ---------- */
+:root {
+  --bg: #0a0f0a;
+  --fg: #33ff66;
+  --dim: #1f8f3f;
+  --accent: #7dffa5;
+  --glow: rgba(51, 255, 102, 0.35);
+  --border: #1f8f3f;
+
+  --font-mono: "JetBrains Mono", "Fira Code", "IBM Plex Mono",
+    ui-monospace, Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+/* Theme overrides — usable anywhere by adding class to any wrapper */
+.theme-phosphor {
+  --bg: #0a0f0a;
+  --fg: #33ff66;
+  --dim: #1f8f3f;
+  --accent: #7dffa5;
+  --glow: rgba(51, 255, 102, 0.35);
+  --border: #1f8f3f;
+}
+.theme-amber {
+  --bg: #120a02;
+  --fg: #f90;
+  --dim: #d96000;
+  --accent: #ffb066;
+  --glow: rgba(255, 106, 0, 0.5);
+  --border: #a06a00;
+}
+.theme-iceberg {
+  --bg: #04121c;
+  --fg: #6fd7ff;
+  --dim: #2d6d8a;
+  --accent: #b3ecff;
+  --glow: rgba(111, 215, 255, 0.35);
+  --border: #2d6d8a;
+}
+
+/* ---------- Base ---------- */
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  line-height: 1.55;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ---------- CRT overlays ---------- */
+.scanlines,
+.flicker,
+.vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+.scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  mix-blend-mode: multiply;
+}
+.flicker {
+  background: rgba(255, 255, 255, 0.015);
+  animation: flicker 0.15s infinite;
+}
+@keyframes flicker {
+  0%   { opacity: 0.85; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.9; }
+}
+.vignette {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* ---------- Top bar / window chrome ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.35);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}
+.window-title {
+  flex: 1;
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+.theme-switch {
+  display: flex;
+  gap: 0.25rem;
+}
+.theme-switch button {
+  background: transparent;
+  color: var(--dim);
+  border: 1px solid var(--border);
+  font-family: inherit;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.theme-switch button:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+.theme-switch button.active {
+  color: var(--bg);
+  background: var(--fg);
+  border-color: var(--fg);
+  box-shadow: 0 0 12px var(--glow);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 0.7rem 1.2rem;
+  border: 1px solid var(--fg);
+  color: var(--fg);
+  background: transparent;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.btn.primary {
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: 0 0 14px var(--glow);
+}
+.btn.primary:hover {
+  box-shadow: 0 0 22px var(--glow);
+  transform: translateY(-1px);
+}
+.btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 12px var(--glow);
+}
+.btn.big {
+  font-size: 0.9rem;
+  padding: 0.9rem 1.6rem;
+}
+
+/* ---------- Generic sections & CTA blocks ---------- */
+.section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem;
+  border-top: 1px dashed var(--border);
+}
+.cta-final {
+  text-align: center;
+  padding: 5rem 1.5rem;
+}
+.cta-header {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem;
+  text-shadow: 0 0 14px var(--glow);
+}
+.cta-sub {
+  color: var(--dim);
+  margin: 0 0 2rem;
+}
+.cta-hint {
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+/* ---------- Shared bits ---------- */
+.prompt { color: var(--accent); }
+.cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1.2s step-end infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ---------- Responsive (global) ---------- */
+@media (max-width: 600px) {
+  .window-title { display: none; }
+  .theme-switch button {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.35rem;
+  }
+}
