@@ -141,6 +141,14 @@ export function useAudioPlayer() {
     if (audioCtx) audioCtx.close();
   }
 
+
+function cleanup() {
+  if (sound) sound.unload();
+  stopProgressLoop();
+  stopVisualizer();
+  if (audioCtx) audioCtx.close();
+}
+
   return {
     // State
     currentTrack,
