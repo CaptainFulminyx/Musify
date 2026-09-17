@@ -22,7 +22,29 @@
           @click="cycleTheme"
           :title="`theme: ${currentTheme}`"
         >
-          ◐
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 24 24"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              fill="currentColor"
+              d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M5 19V5h14v14z"
+              class="b"
+            />
+            <rect
+              width="10"
+              height="10"
+              x="7"
+              y="7"
+              fill="currentColor"
+              class="b"
+              rx="1"
+              ry="1"
+            />
+          </svg>
         </button>
         <button class="icon-btn" @click="showHelp" title="help">?</button>
       </div>
@@ -49,7 +71,7 @@
           @seek="seek"
         />
 
-        <!-- Visualizer -->
+        <!-- Visualizer 
         <Visualizer :is-playing="isPlaying" :get-analyser="getAnalyser" />
 
         <!-- Terminal -->

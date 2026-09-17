@@ -22,11 +22,8 @@ export function useAudioPlayer() {
 
   function initAudioContext() {
     if (audioCtx) return;
-    try {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    } catch (e) {
-      console.error("Web Audio API not available");
-    }
+    
+    audioCtx = Howler.ctx;
   }
 
   function attachAnalyser() {
@@ -39,6 +36,9 @@ export function useAudioPlayer() {
         analyser.fftSize = 128;
         analyser.smoothingTimeConstant = 0.8;
         masterGain.connect(analyser);
+        analyser.connect(audioCtx.destination);
+
+        
       }
     } catch (e) {
       // Silent — visualizer just won't render
@@ -73,10 +73,10 @@ export function useAudioPlayer() {
         onLoaded?.(duration.value);
       },
       onplay: () => {
-        isPlaying.value = true;
         initAudioContext();
         if (audioCtx?.state === "suspended") audioCtx.resume();
         attachAnalyser();
+        isPlaying.value = true;
         startProgressLoop();
       },
       onpause: () => {

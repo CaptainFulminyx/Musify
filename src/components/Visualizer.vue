@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch} from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 
 const props = defineProps({
   isPlaying: Boolean,
@@ -16,7 +16,13 @@ const vizCanvas = ref(null);
 let vizRaf = null;
 
 function startVisualizer() {
-  if (!vizCanvas.value || !props.getAnalyser?.()) return;
+  if (!vizCanvas.value) return;
+
+  // If analyser isn't ready yet, retry on next frame
+  if (!props.getAnalyser?.()) {
+    vizRaf = requestAnimationFrame(startVisualizer);
+    return;
+  }
 
   const canvas = vizCanvas.value;
   const ctx = canvas.getContext("2d");
@@ -28,20 +34,18 @@ function startVisualizer() {
     canvas.width = canvas.clientWidth * window.devicePixelRatio;
     canvas.height = canvas.clientHeight * window.devicePixelRatio;
   };
-
   resize();
   const resizeListener = () => resize();
   window.addEventListener("resize", resizeListener);
 
   const draw = () => {
     vizRaf = requestAnimationFrame(draw);
-
     analyser.getByteFrequencyData(dataArray);
     const w = canvas.width;
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
-    const fg = getComputedStyle(canvas).color;
+    const fg = getComputedStyle(canvas).color || "#33ff66";
     const barWidth = w / bufferLength;
 
     for (let i = 0; i < bufferLength; i++) {
@@ -53,18 +57,23 @@ function startVisualizer() {
     }
     ctx.globalAlpha = 1;
   };
-
   draw();
 
-  return () => {
+  // Store cleanup so stopVisualizer can remove the resize listener
+  _resizeCleanup = () => {
     window.removeEventListener("resize", resizeListener);
-    stopVisualizer();
   };
 }
+
+let _resizeCleanup = null;
 
 function stopVisualizer() {
   if (vizRaf) cancelAnimationFrame(vizRaf);
   vizRaf = null;
+  if (_resizeCleanup) {
+    _resizeCleanup();
+    _resizeCleanup = null;
+  }
 }
 
 onMounted(() => {
@@ -79,7 +88,7 @@ watch(
   () => props.isPlaying,
   (playing) => {
     if (playing) {
-      startVisualizer();
+      if (!vizRaf) startVisualizer();
     } else {
       stopVisualizer();
     }

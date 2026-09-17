@@ -1,23 +1,23 @@
 <template>
   <section class="now-playing">
-    <div class="np-art" :class="{ spinning: isPlaying }">
+    <!--  <div class="np-art" :class="{ spinning: isPlaying }">
       <div class="art-inner">♫</div>
-    </div>
+    </div>-->
     <div class="np-info">
       <div class="np-label">NOW PLAYING</div>
       <div class="np-title" :title="currentTrack?.name">
         {{ currentTrack?.name || "— no track loaded —" }}
       </div>
       <div class="np-artist">
-        {{
-          currentTrack?.artist || "drop a file or type `add` to load music"
-        }}
+        {{ currentTrack?.artist || "drop a file or type `add` to load music" }}
       </div>
 
       <!-- Progress bar -->
       <div class="progress-wrap">
         <div class="progress-bar" @click="onSeekClick" ref="progressEl">
-          <span class="progress-fill">[{{ barFilled }}{{ barDot }}{{ barEmpty }}]</span>
+          <span class="progress-fill"
+            >[{{ barFilled }}{{ barDot }}{{ barEmpty }}]</span
+          >
         </div>
         <div class="progress-times">
           <span>{{ fmtTime(currentTime) }}</span>
