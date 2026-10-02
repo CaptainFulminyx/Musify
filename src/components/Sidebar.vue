@@ -1,24 +1,6 @@
 <template>
   <aside class="side-pane">
     <!-- Queue Section -->
-    <div class="pane-header">
-      <span>QUEUE</span>
-      <span class="dim">{{ queue.length }}</span>
-    </div>
-    <ul class="queue-list">
-      <li
-        v-for="(track, idx) in queue"
-        :key="track.id"
-        :class="{ active: currentTrack && track.id === currentTrack.id }"
-        @click="$emit('play-from-queue', idx)"
-      >
-        <span class="q-idx">{{ String(idx + 1).padStart(2, "0") }}</span>
-        <span class="q-name" :title="track.name">{{ track.name }}</span>
-        <span class="q-artist">{{ track.artist }}</span>
-        <span class="q-dur">{{ fmtTime(track.duration) }}</span>
-      </li>
-      <li v-if="!queue.length" class="empty">queue is empty</li>
-    </ul>
 
     <!-- Library Section -->
     <div class="pane-header library-header">

@@ -1,43 +1,13 @@
 import { ref } from "vue";
 import { get, set, del } from "idb-keyval";
 
-const BUILTIN_TRACKS = [
-  {
-    id: "builtin-1",
-    name: "midnight_drive",
-    artist: "lofi_sessions",
-    file: "/lofi/midnight-drive.mp3",
-    source: "builtin",
-    duration: 0,
-  },
-  {
-    id: "builtin-2",
-    name: "rainy_window",
-    artist: "lofi_sessions",
-    file: "/lofi/rainy-window.mp3",
-    source: "builtin",
-    duration: 0,
-  },
-  {
-    id: "builtin-3",
-    name: "coffee_shop",
-    artist: "lofi_sessions",
-    file: "/lofi/coffee-shop.mp3",
-    source: "builtin",
-    duration: 0,
-  },
-  {
-    id: "builtin-4",
-    name: "late_night_study",
-    artist: "lofi_sessions",
-    file: "/lofi/late-night-study.mp3",
-    source: "builtin",
-    duration: 0,
-  },
+
+const BUILTIN_TRACKS=[
+  
 ];
 
 export function useTrackLibrary() {
-  const queue = ref([]);
+  const queue  = ref([]);
   const library = ref([]);
   const loopMode = ref(false);
 
