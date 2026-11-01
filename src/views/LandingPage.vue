@@ -1,13 +1,12 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+import { RouterLink } from "vue-router";
 import { useThemeStore } from "@/stores/theme";
 
 const themeStore = useThemeStore();
-const { themes } = themeStore; // just themes, we'll use the store directly
-
+const { themes } = themeStore;
 /* ---------- Typewriter ---------- */
 const commands = computed(() => [
-  "> play lofi beats",
   "> play lofi beats",
   "> to your local music",
   "> be the nerd in the group",
@@ -24,18 +23,33 @@ let deleting = false;
 let timeoutId = null;
 
 const tick = () => {
+  // 1. Get the current string from the array
   const current = commands.value[cmdIndex];
+
+  // Safety check: if current is undefined, reset and exit early
+  if (!current) {
+    cmdIndex = 0;
+    charIndex = 0;
+    deleting = false;
+    timeoutId = setTimeout(tick, 65);
+    return;
+  }
+
   if (!deleting) {
+    // Typing state: add characters
     typedText.value = current.slice(0, ++charIndex);
+
     if (charIndex === current.length) {
       deleting = true;
-      timeoutId = setTimeout(tick, 1400);
+      timeoutId = setTimeout(tick, 1400); // Pause at full word
       return;
     }
   } else {
     typedText.value = current.slice(0, --charIndex);
+
     if (charIndex === 0) {
       deleting = false;
+
       cmdIndex = (cmdIndex + 1) % commands.value.length;
     }
   }
@@ -51,14 +65,8 @@ onUnmounted(() => clearTimeout(timeoutId));
     <header class="topbar">
       <div class="window-title"></div>
       <div class="theme-switch">
-        <button
-          v-for="t in themes"
-          :key="t"
-          :class="{ active: themeStore.isActive(t) }"
-          @click="themeStore.setTheme(t)"
-          :title="`Switch to ${t}`"
-        >
-          {{ t }}
+        <button class="theme-btn" @click="themeStore.cycle()">
+          ${{ themeStore.theme.slice(0, 1) }}
         </button>
       </div>
     </header>
@@ -71,20 +79,18 @@ onUnmounted(() => clearTimeout(timeoutId));
 
       <h1 class="hero-title">BashTune<span class="cursor">_</span></h1>
 
-      <p class="hero-tagline">A terminal-themed music player in the web.</p>
+      <p class="hero-tagline">A terminal-themed music player.</p>
 
       <p class="hero-description">Listen to your music files & VIBE.</p>
 
       <div class="typewriter">
         <span class="prompt">&gt;</span>
         <span class="typed">{{ typedText }}</span>
-        <span class="cursor">|</span>
+        <span class="cursor">_</span>
       </div>
-
-      <div class="cta-row">
-        <a href="#launch" class="btn primary">&gt; launch_player</a>
-        <a href="#docs" class="btn secondary">&gt; read_docs</a>
-      </div>
+      <RouterLink to="/app">
+        <button class="open-btn">$ssh open ~BT</button>
+      </RouterLink>
     </section>
   </div>
 </template>
@@ -96,7 +102,7 @@ onUnmounted(() => clearTimeout(timeoutId));
   min-height: 100vh;
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-mono);
+
   position: relative;
   overflow-x: hidden;
   line-height: 1.55;
@@ -147,6 +153,19 @@ onUnmounted(() => clearTimeout(timeoutId));
   flex-wrap: wrap;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.theme-btn {
+  background: transparent;
+  color: var(--fg);
+  padding: 5px;
+  border: 2px solid var(--fg);
+}
+.open-btn {
+  background: transparent;
+  color: var(--fg);
+  padding: 15px;
+  border: 5px solid var(--fg);
 }
 
 /* Landing-specific mobile tweak */
