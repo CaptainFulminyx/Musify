@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from "vue";
+import { useAutotype } from "../composables/Autotype";
 
 const currentInput = ref("");
 const cursorPos = ref(0);
@@ -14,12 +15,43 @@ const atCursor = computed(
 );
 const after = computed(() => currentInput.value.slice(cursorPos.value + 1));
 
+// Autocomplete suggestion
+const suggestion = useAutotype(currentInput);
+
+// Only show the ghost text when the caret is at the end of the input
+const ghost = computed(() =>
+  cursorPos.value === currentInput.value.length ? suggestion.value.ghost : "",
+);
+
 const syncCursor = () => {
   // Wait a tick so selectionStart reflects the latest key/input
   nextTick(() => {
     cursorPos.value =
       terminalInput.value?.selectionStart ?? currentInput.value.length;
   });
+};
+
+const acceptSuggestion = () => {
+  const { completion } = suggestion.value;
+  if (!completion) return;
+  currentInput.value = completion;
+  nextTick(() => {
+    const el = terminalInput.value;
+    el?.focus();
+    el?.setSelectionRange(completion.length, completion.length);
+    cursorPos.value = completion.length;
+  });
+};
+
+// Right arrow at the end of the line accepts, like fish shell
+const onRight = (e) => {
+  if (
+    cursorPos.value === currentInput.value.length &&
+    suggestion.value.completion
+  ) {
+    e.preventDefault();
+    acceptSuggestion();
+  }
 };
 
 const submitCommand = () => {
@@ -37,6 +69,7 @@ const focusTerminal = () => {
 
 onMounted(focusTerminal);
 </script>
+
 <template>
   <div class="terminal" @click="focusTerminal">
     <div class="terminal-header prompt">
@@ -52,7 +85,8 @@ onMounted(focusTerminal);
     <div class="terminal-line active-line">
       <span class="prompt">~/app: $</span>{{ " " }}<span>{{ before }}</span
       ><span class="cursor">{{ atCursor }}</span
-      ><span>{{ after }}</span>
+      ><span>{{ after }}</span
+      ><span class="ghost" @click.stop="acceptSuggestion">{{ ghost }}</span>
 
       <!-- Hidden input only captures keystrokes -->
       <input
@@ -66,6 +100,8 @@ onMounted(focusTerminal);
         autocorrect="off"
         spellcheck="false"
         @keydown.enter="submitCommand"
+        @keydown.tab.prevent="acceptSuggestion"
+        @keydown.right="onRight"
         @input="syncCursor"
         @keyup="syncCursor"
         @click="syncCursor"
@@ -75,6 +111,7 @@ onMounted(focusTerminal);
     <div ref="bottom"></div>
   </div>
 </template>
+
 <style scoped>
 .terminal {
   position: relative;
@@ -106,6 +143,11 @@ onMounted(focusTerminal);
 .cursor {
   color: var(--dim);
   animation: blink 1s steps(1) infinite;
+}
+
+.ghost {
+  color: var(--dim);
+  opacity: 0.5;
 }
 
 @keyframes blink {
