@@ -31,37 +31,36 @@
 
 /* Theme overrides — usable anywhere by adding class to any wrapper */
 html.theme-phosphor {
-  --bg: #0a0f0a;
-  --fg: #33ff66;
-  --dim: #1f8f3f;
-  --accent: #7dffa5;
-  --glow: rgba(51, 255, 102, 0.35);
-  --border: #1f8f3f;
+  --bg: #070d08;
+  --fg: #39ff6e;
+  --dim: #2fa352;
+  --accent: #b6ffc4;
+  --glow: rgba(57, 255, 110, 0.35);
+  --border: #1b5e30;
 }
 html.theme-amber {
-  --bg: #120a02;
-  --fg: #f90;
-  --dim: #d96000;
-  --accent: #ffb066;
-  --glow: rgba(255, 106, 0, 0.5);
-  --border: #a06a00;
+  --bg: #130b03;
+  --fg: #ffb000;
+  --dim: #b87a10;
+  --accent: #ffd98a;
+  --glow: rgba(255, 176, 0, 0.4);
+  --border: #6b4710;
 }
 html.theme-iceberg {
-  --bg: #04121c;
-  --fg: #6fd7ff;
-  --dim: #2d6d8a;
-  --accent: #b3ecff;
-  --glow: rgba(111, 215, 255, 0.35);
-  --border: #2d6d8a;
+  --bg: #06121b;
+  --fg: #7fb8ff;
+  --dim: #4a7f9c;
+  --accent: #c2f0ff;
+  --glow: rgba(127, 184, 255, 0.3);
+  --border: #1f4a63;
 }
-
 
 /* ---------- Base ---------- */
 html,
 body,
 #app {
-  width: 100%;
-  height: 100%;
+  width: 100svw;
+  height: 100svh;
   margin: 0;
   padding: 0;
   background: var(--bg);
