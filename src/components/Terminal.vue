@@ -78,12 +78,12 @@ onMounted(focusTerminal);
 
     <!-- 1. History: read-only, prompt on every line -->
     <div v-for="(line, index) in history" :key="index" class="terminal-line">
-      <span class="prompt">~/app: $</span>{{ " " }}<span>{{ line }}</span>
+      <span class="prompt">~/app:$</span>{{ " " }}<span>{{ line }}</span>
     </div>
 
     <!-- 2. Active line: prompt + typed text flow inline, so long input wraps -->
     <div class="terminal-line active-line">
-      <span class="prompt">~/app: $</span>{{ " " }}<span>{{ before }}</span
+      <span class="prompt">~/app:$</span>{{ " " }}<span>{{ before }}</span
       ><span class="cursor">{{ atCursor }}</span
       ><span>{{ after }}</span
       ><span class="ghost" @click.stop="acceptSuggestion">{{ ghost }}</span>
@@ -100,6 +100,7 @@ onMounted(focusTerminal);
         autocorrect="off"
         spellcheck="false"
         @keydown.enter="submitCommand"
+        @keyup.shift.prevent="acceptSuggestion"
         @keydown.tab.prevent="acceptSuggestion"
         @keydown.right="onRight"
         @input="syncCursor"
